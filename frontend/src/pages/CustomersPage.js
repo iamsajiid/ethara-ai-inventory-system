@@ -58,7 +58,7 @@ function CustomerForm({ onSave, onCancel }) {
             type="tel"
             value={form.phone}
             onChange={(e) => setForm({ ...form, phone: e.target.value })}
-            placeholder="+1 555 000 0000"
+            placeholder="+91 12345 67890"
           />
         </div>
 
