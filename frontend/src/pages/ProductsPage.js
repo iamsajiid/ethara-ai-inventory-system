@@ -134,17 +134,23 @@ export default function ProductsPage() {
       </div>
 
       {showForm && <ProductForm onSave={handleAdd} onCancel={() => setShowForm(false)} />}
-      {editing && <ProductForm initial={editing} onSave={handleEdit} onCancel={() => setEditing(null)} />}
+      {editing   && <ProductForm initial={editing} onSave={handleEdit} onCancel={() => setEditing(null)} />}
 
       <div className="card">
         <div className="table-wrapper">
           {products.length === 0 ? (
-            <div className="empty-state"><p>No products yet. Click "Add Product" to get started.</p></div>
+            <div className="empty-state">
+              <p>No products yet. Click "Add Product" to get started.</p>
+            </div>
           ) : (
             <table>
               <thead>
                 <tr>
-                  <th>Name</th><th>SKU</th><th>Price</th><th>Stock</th><th>Actions</th>
+                  <th>Name</th>
+                  <th>SKU</th>
+                  <th>Price</th>
+                  <th>Stock</th>
+                  <th>Actions</th>
                 </tr>
               </thead>
               <tbody>
@@ -152,21 +158,44 @@ export default function ProductsPage() {
                   <tr key={p.id}>
                     <td>
                       <strong>{p.name}</strong>
-                      {p.description && <><br /><small style={{ color: "var(--gray-500)" }}>{p.description}</small></>}
+                      {p.description && (
+                        <>
+                          <br />
+                          <small className="hide-mobile" style={{ color: "var(--gray-500)" }}>
+                            {p.description}
+                          </small>
+                        </>
+                      )}
                     </td>
                     <td><code>{p.sku}</code></td>
                     <td>${Number(p.price).toFixed(2)}</td>
                     <td>
-                      <span className={`badge ${p.quantity === 0 ? "badge-danger" : p.quantity <= 10 ? "badge-warning" : "badge-success"}`}>
+                      <span
+                        className={`badge ${
+                          p.quantity === 0
+                            ? "badge-danger"
+                            : p.quantity <= 10
+                            ? "badge-warning"
+                            : "badge-success"
+                        }`}
+                      >
                         {p.quantity}
                       </span>
                     </td>
                     <td>
-                      <div style={{ display: "flex", gap: 6 }}>
-                        <button className="btn btn-secondary btn-sm" onClick={() => setEditing(p)}>
+                      <div className="action-group">
+                        <button
+                          className="btn btn-secondary btn-sm"
+                          onClick={() => setEditing(p)}
+                          title="Edit product"
+                        >
                           <Pencil size={13} />
                         </button>
-                        <button className="btn btn-danger btn-sm" onClick={() => handleDelete(p)}>
+                        <button
+                          className="btn btn-danger btn-sm"
+                          onClick={() => handleDelete(p)}
+                          title="Delete product"
+                        >
                           <Trash2 size={13} />
                         </button>
                       </div>

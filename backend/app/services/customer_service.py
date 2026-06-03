@@ -1,7 +1,7 @@
 from sqlalchemy.orm import Session
-from fastapi import HTTPException, status
 from app.models.models import Customer
 from app.schemas.customer_schema import CustomerCreate
+from app.exceptions import NotFoundError, ConflictError
 
 
 class CustomerService:
@@ -12,10 +12,8 @@ class CustomerService:
             Customer.email == customer_data.email
         ).first()
         if existing:
-            raise HTTPException(
-                status_code=status.HTTP_409_CONFLICT,
-                detail=f"Customer with email '{customer_data.email}' already exists"
-            )
+            raise ConflictError(f"Customer with email '{customer_data.email}' already exists")
+
         customer = Customer(**customer_data.model_dump())
         db.add(customer)
         db.commit()
@@ -30,10 +28,7 @@ class CustomerService:
     def get_customer_by_id(db: Session, customer_id: int) -> Customer:
         customer = db.query(Customer).filter(Customer.id == customer_id).first()
         if not customer:
-            raise HTTPException(
-                status_code=status.HTTP_404_NOT_FOUND,
-                detail=f"Customer with id {customer_id} not found"
-            )
+            raise NotFoundError("Customer", customer_id)
         return customer
 
     @staticmethod

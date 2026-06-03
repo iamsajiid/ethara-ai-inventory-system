@@ -3,7 +3,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from app.core.database import engine, Base
 from app.routers import products, customers, orders, dashboard
 
-# Create all tables
+
 Base.metadata.create_all(bind=engine)
 
 app = FastAPI(
@@ -12,16 +12,20 @@ app = FastAPI(
     version="1.0.0",
 )
 
-# CORS middleware
+ALLOWED_ORIGINS = [
+    "https://ethara-ai-inventory-system.vercel.app",  # production frontend
+    "http://localhost:3000",                          # local dev
+    "http://127.0.0.1:3000",                          # local dev (alt)
+]
+
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],
+    allow_origins=ALLOWED_ORIGINS,
     allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
+    allow_methods=["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
+    allow_headers=["Content-Type", "Authorization", "Accept"],
 )
 
-# Include routers
 app.include_router(products.router, prefix="/products", tags=["Products"])
 app.include_router(customers.router, prefix="/customers", tags=["Customers"])
 app.include_router(orders.router, prefix="/orders", tags=["Orders"])

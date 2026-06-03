@@ -29,26 +29,39 @@ function CustomerForm({ onSave, onCancel }) {
     <div className="form-overlay">
       <div className="form-modal">
         <h2>Add Customer</h2>
+
         <div className="form-group">
           <label>Full Name</label>
-          <input type="text" value={form.full_name}
+          <input
+            type="text"
+            value={form.full_name}
             onChange={(e) => setForm({ ...form, full_name: e.target.value })}
-            placeholder="e.g. Jane Doe" />
+            placeholder="e.g. Jane Doe"
+          />
           {errors.full_name && <p className="error-msg">{errors.full_name}</p>}
         </div>
+
         <div className="form-group">
           <label>Email Address</label>
-          <input type="email" value={form.email}
+          <input
+            type="email"
+            value={form.email}
             onChange={(e) => setForm({ ...form, email: e.target.value })}
-            placeholder="jane@example.com" />
+            placeholder="jane@example.com"
+          />
           {errors.email && <p className="error-msg">{errors.email}</p>}
         </div>
+
         <div className="form-group">
           <label>Phone (optional)</label>
-          <input type="tel" value={form.phone}
+          <input
+            type="tel"
+            value={form.phone}
             onChange={(e) => setForm({ ...form, phone: e.target.value })}
-            placeholder="+1 555 000 0000" />
+            placeholder="+1 555 000 0000"
+          />
         </div>
+
         <div className="form-actions">
           <button className="btn btn-secondary" onClick={onCancel}>Cancel</button>
           <button className="btn btn-primary" onClick={handleSubmit} disabled={saving}>
@@ -111,23 +124,37 @@ export default function CustomersPage() {
       <div className="card">
         <div className="table-wrapper">
           {customers.length === 0 ? (
-            <div className="empty-state"><p>No customers yet. Click "Add Customer" to get started.</p></div>
+            <div className="empty-state">
+              <p>No customers yet. Click "Add Customer" to get started.</p>
+            </div>
           ) : (
             <table>
               <thead>
-                <tr><th>Name</th><th>Email</th><th>Phone</th><th>Joined</th><th>Actions</th></tr>
+                <tr>
+                  <th>Name</th>
+                  <th>Email</th>
+                  <th className="hide-mobile">Phone</th>
+                  <th className="hide-mobile">Joined</th>
+                  <th>Actions</th>
+                </tr>
               </thead>
               <tbody>
                 {customers.map((c) => (
                   <tr key={c.id}>
                     <td><strong>{c.full_name}</strong></td>
-                    <td>{c.email}</td>
-                    <td>{c.phone || <span style={{ color: "var(--gray-300)" }}>—</span>}</td>
-                    <td style={{ color: "var(--gray-500)", fontSize: 13 }}>
+                    <td style={{ wordBreak: "break-word", maxWidth: 200 }}>{c.email}</td>
+                    <td className="hide-mobile">
+                      {c.phone || <span style={{ color: "var(--gray-300)" }}>—</span>}
+                    </td>
+                    <td className="hide-mobile" style={{ color: "var(--gray-500)", fontSize: 13 }}>
                       {new Date(c.created_at).toLocaleDateString()}
                     </td>
                     <td>
-                      <button className="btn btn-danger btn-sm" onClick={() => handleDelete(c)}>
+                      <button
+                        className="btn btn-danger btn-sm"
+                        onClick={() => handleDelete(c)}
+                        title="Delete customer"
+                      >
                         <Trash2 size={13} />
                       </button>
                     </td>

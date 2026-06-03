@@ -1,6 +1,13 @@
 from pydantic import BaseModel, field_validator
 from typing import List, Optional
 from datetime import datetime
+from enum import Enum
+
+
+class OrderStatus(str, Enum):
+    pending = "pending"
+    fulfilled = "fulfilled"
+    cancelled = "cancelled"
 
 
 class OrderItemCreate(BaseModel):
@@ -35,6 +42,10 @@ class OrderCreate(BaseModel):
         if not v:
             raise ValueError("Order must contain at least one item")
         return v
+
+
+class OrderFulfill(BaseModel):
+    notes: Optional[str] = None
 
 
 class OrderResponse(BaseModel):

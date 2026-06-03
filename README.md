@@ -34,6 +34,9 @@ inventory-system/
 │       │   └── database.py
 │       ├── models/
 │       │   └── models.py
+│       ├── exceptions/
+│       │   ├── __init__.py
+│       │   ├── http_exceptions.py
 │       ├── schemas/
 │       │   ├── product_schema.py
 │       │   ├── customer_schema.py
@@ -192,14 +195,37 @@ Frontend → http://localhost:3000
 | Method | Endpoint                        | Description                        |
 |--------|---------------------------------|------------------------------------|
 | POST   | /orders/                        | Create order (deducts inventory)   |
-| GET    | /orders/                        | List all orders                    |
+| GET    | /orders/                        | List all orders (can filter by status)   |
 | GET    | /orders/{id}                    | Get order with items               |
-| DELETE | /orders/{id}                    | Cancel order (restores inventory)  |
+| DELETE | /orders/{id}                    | Cancel order (restores inventory, marks as cancelled)  |
 
 ### Dashboard
 | Method | Endpoint                        | Description          |
 |--------|---------------------------------|----------------------|
 | GET    | /dashboard/summary              | Totals + low stock   |
+
+---
+
+## Features
+
+### Order Management
+
+#### Order Filtering
+- **All Filter**: Displays all orders regardless of status (pending, completed, cancelled, etc.)
+- **Status Filters**: Filter orders by specific status (e.g., "Pending", "Cancelled", "Completed")
+- Each filter tab dynamically shows order counts for that status
+
+#### Order Cancellation
+- **In-App Confirmation Modal**: When cancelling an order, users see a professional in-app confirmation dialog (not a browser dropdown)
+- **Inventory Restoration**: Cancelling an order automatically restores the stock quantities for all items in that order
+- **Status Update**: Cancelled orders are marked with a "Cancelled" status and appear immediately in the Cancelled filter
+- **Seamless UX**: After cancellation confirmation, the order list updates in real-time to reflect the status change
+
+#### Order Visibility
+- Cancelled orders remain in the system and are visible when:
+  - Viewing the "All" filter (shows all orders across all statuses)
+  - Viewing the "Cancelled" status filter
+- Cancelled orders are hidden from other status filters (e.g., "Pending", "Completed")
 
 ---
 
@@ -282,8 +308,9 @@ backend:
 - Product quantity cannot be negative
 - Orders cannot be placed if any product has insufficient stock
 - Creating an order automatically deducts quantity from inventory
-- Cancelling an order automatically restores inventory
+- Cancelling an order automatically restores inventory and marks the order as "Cancelled"
 - Order total is always calculated server-side
 - Products with quantity ≤ 10 are flagged as low stock
+- Cancelled orders remain in the system and can be viewed via the "All" filter or "Cancelled" status filter
 
 ---

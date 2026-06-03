@@ -14,7 +14,9 @@ export default function DashboardPage() {
   }, []);
 
   if (loading) return <div className="loading">Loading dashboard…</div>;
-  if (error) return <div className="empty-state" style={{ color: "var(--danger)" }}>{error}</div>;
+  if (error) return (
+    <div className="empty-state" style={{ color: "var(--danger)" }}>{error}</div>
+  );
 
   const stats = [
     { label: "Total Products", value: summary.total_products, cls: "primary" },
@@ -63,7 +65,11 @@ export default function DashboardPage() {
                         <td><strong>{p.name}</strong></td>
                         <td><code>{p.sku}</code></td>
                         <td>
-                          <span className={`badge ${p.quantity === 0 ? "badge-danger" : "badge-warning"}`}>
+                          <span
+                            className={`badge ${
+                              p.quantity === 0 ? "badge-danger" : "badge-warning"
+                            }`}
+                          >
                             {p.quantity} left
                           </span>
                         </td>
